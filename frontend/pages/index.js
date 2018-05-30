@@ -43,7 +43,7 @@ class IndexPage extends React.Component {
           {step === 2 && <QuestionPage {...this.props} />}
           {step === 3 && <HintPage {...this.props} />}
           {step === 4 && <Scanner {...this.props} />}
-          {step === 1 && <Final {...this.props} />}
+          {step === 5 && <Final {...this.props} />}
           {/* {step === 1 && <Dashboard {...this.props} />} */}
         </div>
       )
