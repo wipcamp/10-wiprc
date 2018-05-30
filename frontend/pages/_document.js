@@ -55,9 +55,6 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-        {/* <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js" /> */}
-        <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js" />
-        <script type="text/javascript" src="/static/js/scanner.js" />
       </html>
     )
   }

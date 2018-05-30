@@ -8,9 +8,14 @@ export default () => next => (action) => {
   })
   const actionPromise = new Promise((resolve, reject) =>
     action.promise
-      .then(response => {
+      .then(async querySnapshot => {
+        let queryResult = []
+        await querySnapshot.forEach((doc) => {
+          queryResult.push(doc.data())
+        })
+        console.log(queryResult)
         return resolve(
-          next({ ...action, type: action.type.RESOLVED, ...response })
+          next({ ...action, type: action.type.RESOLVED, data: queryResult })
         )
       }
       )

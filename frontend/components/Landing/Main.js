@@ -1,12 +1,18 @@
 import React from 'react'
+import { MinHeight } from '../Core/layout'
 
-const Landing = ({ setField }) => (
-  <div>
-    <form onSubmit={() => setField('step', 2)} action='/'>
-      Enter Key
-      <input value={100} />
-      <button type='button'>Confirm</button>
-    </form>
+const Landing = ({ setField, getFlavorByFlavorCode, game: { key } }) => (
+  <div className='container'>
+    <div className='row'>
+      <MinHeight className='col-12 d-flex justify-content-center align-items-center'>
+        <form className='form-group col-12 text-center' onSubmit={(e) => getFlavorByFlavorCode(e, key)} action='/'>
+          <h1>กรุณาใส่รหัส</h1>
+          {key}
+          <input className='form-control' value={key} onChange={(e) => setField('key', e.target.value)} /> <br />
+          <button className='btn btn-primary btn-lg' type='submit' >เล่นเลย !</button>
+        </form>
+      </MinHeight>
+    </div>
   </div>
 )
 

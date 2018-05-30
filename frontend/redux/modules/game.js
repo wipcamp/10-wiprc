@@ -1,59 +1,113 @@
 import actionCreator from '../../libs/actionCreator'
-import api from '../../libs/api'
+import { getOne, getAll } from '../../libs/firebaseHelper'
+import { resolve } from 'uri-js'
+import { reject } from 'any-promise'
 
 const gameAction = actionCreator('game')
 
-const SET_HELLO = gameAction('SET_HELLO', true)
-const GET_HELLO = gameAction('GET_HELLO', true)
+// const SET_HELLO = gameAction('SET_HELLO', true)
+// const GET_HELLO = gameAction('GET_HELLO', true)
+
 const SET_FIELD = gameAction('SET_FIELD')
+const GET_FLAVOR = gameAction('GET_FLAVOR', true)
+const GET_ALL_QUESTION = gameAction('GET_ALL_QUESTION', true)
+const GET_ALL_HINT = gameAction('GET_ALL_HINT', true)
+
+const RANDOM_QUEST = gameAction('RANDOM_QUEST')
+const RANDOM_HINT = gameAction('RANDOM_HINT')
 
 let initialState = {
   loading: false,
-  key: '',
   step: 1,
-  count: 1,
-  score: 0,
+  isClick: true,
+
+  key: '',
   flavor: '',
-  question: '',
-  answer: '',
-  qrResult: 'Result',
-  error: 'Error',
-  hint: []
-  // ,
-  // error: {}
+
+  score: 0,
+
+  firstQuest: true,
+  questions: [],
+  delay: 2500,
+
+  hint: [],
+  qrResult: '',
+
+  error: ''
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SET_HELLO.PENDING:
+    case GET_FLAVOR.PENDING:
       return {
         ...state,
-        loading: true
+        loading: true,
+        key: ''
       }
-    case SET_HELLO.RESOLVED:
+    case GET_FLAVOR.RESOLVED:
+      window && window.localStorage.setItem('flavorName', action.data[0].flavorName)
       return {
         ...state,
         loading: false,
-        text: action.payload
+        step: 2,
+        flavor: action.data[0].flavorName,
+        firstQuest: action.data[0].firstQuest
       }
-    case GET_HELLO.PENDING:
-      return {
-        ...state,
-        loading: true
-      }
-    case GET_HELLO.RESOLVED:
+    case GET_FLAVOR.REJECTED:
       return {
         ...state,
         loading: false,
-        data: action.data
+        error: 'Cant Connection Firebase'
       }
-    case GET_HELLO.REJECTED:
+    case GET_ALL_QUESTION.PENDING:
+      return {
+        ...state,
+        loading: true,
+        key: ''
+      }
+    case GET_ALL_QUESTION.RESOLVED:
+      window && window.localStorage.setItem('questions', JSON.stringify(action.data))
       return {
         ...state,
         loading: false,
-        err: 'Cant Connection API'
+        question: action.data
+      }
+    case GET_ALL_QUESTION.REJECTED:
+      return {
+        ...state,
+        loading: false,
+        error: 'Cant Connection Firebase'
+      }
+    case GET_ALL_HINT.PENDING:
+      return {
+        ...state,
+        loading: true,
+        key: ''
+      }
+    case GET_ALL_HINT.RESOLVED:
+      window && window.localStorage.setItem('hints', JSON.stringify(action.data))
+      return {
+        ...state,
+        loading: false,
+        hint: action.data
+      }
+    case GET_ALL_HINT.REJECTED:
+      return {
+        ...state,
+        loading: false,
+        error: 'Cant Connection Firebase'
       }
     case SET_FIELD:
+      return {
+        ...state,
+        [action.field]: action.value
+      }
+    case RANDOM_QUEST:
+      return {
+        ...state,
+        [action.field]: action.value
+      }
+    case RANDOM_HINT:
       return {
         ...state,
         [action.field]: action.value
@@ -63,14 +117,63 @@ export default (state = initialState, action) => {
 }
 
 export const actions = {
-  setHello: (text) => ({
-    type: SET_HELLO
-    // promise: api.post('/hello/', { text }).then(resp => resp.data.text)
-  }),
-  getHello: () => ({
-    type: GET_HELLO,
-    promise: api.get('/hello/db')
-  }),
+  getFlavorByFlavorCode: (e, flavorCode) => {
+    e && e.preventDefault()
+    window && window.localStorage.setItem('flavorKey', flavorCode)
+    const flavorsRef = getOne(`flavors`, `flavorCode`, flavorCode)
+    return ({
+      type: GET_FLAVOR,
+      promise: flavorsRef.get()
+    })
+  },
+  randomQuestion: (questions, setField) => {
+    console.log(questions)
+    if (questions.length > 0) {
+      const index = Math.floor((Math.random() * questions.length))
+      const quest = questions[index]
+      setField('question', quest)
+      questions.splice(index, 1)
+      setField('questions', questions)
+      window && window.localStorage.setItem('questions', questions)
+    } else {
+      setField('step', 5)
+    }
+    return ({
+      type: GET_ALL_HINT,
+      promise: new Promise((resolve, reject) => { return null })
+    })
+  },
+  randomHint: (hintAll, setField) => {
+    window && window.localStorage.setItem('hints', JSON.stringify(hintAll))
+    let index = Math.floor((Math.random() * hintAll.length - 2)) + 1
+    let hintIndex = []
+    if (hintAll.length < 3) {
+      hintAll.map((data, i) => hintIndex.push(i))
+    } else {
+      hintIndex = [0, index, hintAll.length - 1]
+    }
+    setField('hintIndex', hintIndex)
+    window && window.localStorage.setItem('hintIndex', JSON.stringify(hintIndex))
+    return ({
+      type: GET_ALL_HINT,
+      // promise: null
+      promise: new Promise((resolve, reject) => { return null })
+    })
+  },
+  getAllQuestion: () => {
+    const questionRef = getAll(`questions`)
+    return ({
+      type: GET_ALL_QUESTION,
+      promise: questionRef.get()
+    })
+  },
+  getAllHint: () => {
+    const hintRef = getAll(`hints`)
+    return ({
+      type: GET_ALL_HINT,
+      promise: hintRef.get()
+    })
+  },
   setField: (field, value) => ({
     type: SET_FIELD,
     field,

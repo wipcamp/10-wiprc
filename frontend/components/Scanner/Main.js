@@ -1,30 +1,49 @@
 import React from 'react'
 import Reader from 'react-qr-reader'
+import { MinHeight } from '../Core/layout'
 
-const Scanner = ({ setField, qrResult, error }) => (
-// const Scanner = (props) => (
-  <div>
-    <div>Scanner - WOW</div>
-    {/* <h2>Error : {props.error}</h2> */}
-    {/* <h2>Result : {props.qrResult}</h2> */}
-    <hr />
-    <video id='preview' />
-
-    {/* <Reader
-      delay={700}
-      onError={(e) => {
-        console.log('error ', e)
-        setField('error', e)
-        // props.setField('error', e)
-      }}
-      onScan={(value) => {
-        console.log('scan ', value)
-        // value !== null && props.setField('qrResult', value)
-        value !== null && setField('qrResult', value)
-      }}
-      resolution={100}
-    /> */}
-    <br />
+const Scanner = ({ setField, randomQuestion, game: { questions, hint, hintCode, error } }) => (
+  <div className='container'>
+    <div className='row'>
+      <MinHeight className='col-12 text-center'>
+        <h1 className='my-3'>แสกน QR Code !</h1>
+        {
+          error && <h3 className='my-3'>{ error }</h3>
+        }
+        <hr />
+        <Reader
+          delay={300}
+          onError={(e) => {
+            console.error('error ', e)
+            setField('error', e)
+          }}
+          onScan={(value) => {
+            console.log('scan ', value)
+            if (value !== null) {
+              if (hintCode === value) {
+                let index = hint.findIndex((data) => {
+                  return data.hintCode === value
+                })
+                hint.splice(index, 1)
+                setField('hint', hint)
+                setField('hintIndex', [])
+                window.localStorage.setItem('hintAll', JSON.stringify(hint))
+                console.log(hint.length)
+                if (hint.length === 0) {
+                  setField('step', 5)
+                } else {
+                  randomQuestion(questions, setField) && setField('step', 2)
+                }
+              } else {
+                setField('error', 'QrCode ไม่ถูกต้อง')
+              }
+            }
+          }}
+          resolution={200}
+        />
+        <button onClick={() => setField('step', 3)} className="btn btn-primary col-12 mt-2">Back</button>
+      </MinHeight>
+    </div>
   </div>
 )
 

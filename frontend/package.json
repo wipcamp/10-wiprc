@@ -18,6 +18,8 @@
     "dotenv": "^5.0.1",
     "eslint-plugin-react": "^7.7.0",
     "express": "^4.16.2",
+    "firebase": "5.0.4",
+    "firebase-admin": "5.9.1",
     "joi": "^13.1.2",
     "js-cookie": "^2.2.0",
     "jsonwebtoken": "^8.2.0",
