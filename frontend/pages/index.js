@@ -39,7 +39,7 @@ class IndexPage extends React.Component {
       return (
         <div className='container-fluid'>
           {flavor !== '' && <Header flavor={flavor} score={score} />}
-          {/* {step === 1 && <LandingPage {...this.props} />} */}
+          {step === 1 && <LandingPage {...this.props} />}
           {step === 2 && <QuestionPage {...this.props} />}
           {step === 3 && <HintPage {...this.props} />}
           {step === 4 && <Scanner {...this.props} />}
