@@ -20,17 +20,20 @@ let initialState = {
   loading: false,
   step: 1,
   isClick: true,
-
+  index: 0,
   key: '',
+  flavorId: '',
   flavor: '',
 
   score: 0,
 
   firstQuest: true,
   questions: [],
+  question: [],
   delay: 2500,
 
   hint: [],
+  showHint: [],
   qrResult: '',
 
   error: ''
@@ -46,10 +49,12 @@ export default (state = initialState, action) => {
       }
     case GET_FLAVOR.RESOLVED:
       window && window.localStorage.setItem('flavorName', action.data[0].flavorName)
+      window && window.localStorage.setItem('flavorId', action.data[0].flavorId)
       return {
         ...state,
         loading: false,
         step: 2,
+        flavorId: action.data[0].flavorId,
         flavor: action.data[0].flavorName,
         firstQuest: action.data[0].firstQuest
       }
@@ -127,15 +132,15 @@ export const actions = {
     })
   },
   randomQuestion: (questions, setField) => {
-    console.log(questions)
+    console.log('questions', questions)
     if (questions.length > 0) {
       const index = Math.floor((Math.random() * questions.length))
-      const quest = questions[index]
-      setField('question', quest)
+      setField('index', index)
       questions.splice(index, 1)
       setField('questions', questions)
       window && window.localStorage.setItem('questions', questions)
     } else {
+      console.log('wow')
       setField('step', 5)
     }
     return ({
@@ -143,16 +148,24 @@ export const actions = {
       promise: new Promise((resolve, reject) => { return null })
     })
   },
-  randomHint: (hintAll, setField) => {
+  randomHint: (hintAll, setField, showHint) => {
     window && window.localStorage.setItem('hints', JSON.stringify(hintAll))
-    let index = Math.floor((Math.random() * hintAll.length - 2)) + 1
-    let hintIndex = []
+    let hintIndex = showHint
     if (hintAll.length < 3) {
       hintAll.map((data, i) => hintIndex.push(i))
     } else {
-      hintIndex = [0, index, hintAll.length - 1]
+      let index = Math.floor((Math.random() * hintAll.length))
+      hintIndex.push(hintAll[index])
+      hintAll.splice(index, 1)
+      index = Math.floor((Math.random() * hintAll.length))
+      hintIndex.push(hintAll[index])
+      hintAll.splice(index, 1)
+      index = Math.floor((Math.random() * hintAll.length))
+      hintIndex.push(hintAll[index])
+      hintAll.splice(index, 1)
     }
-    setField('hintIndex', hintIndex)
+    setField('showHint', hintIndex)
+    setField('hint', hintAll)
     window && window.localStorage.setItem('hintIndex', JSON.stringify(hintIndex))
     return ({
       type: GET_ALL_HINT,

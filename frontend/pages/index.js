@@ -11,7 +11,7 @@ import QuestionPage from '../components/Question/Main'
 import HintPage from '../components/Hint/Main'
 import Scanner from '../components/Scanner/Main'
 import Final from '../components/Final/Main'
-import Dashboard from '../components/Dashboard/Main'
+// import Dashboard from '../components/Dashboard/Main'
 
 import { actions as gameActions } from '../redux/modules/game'
 
@@ -22,12 +22,13 @@ class IndexPage extends React.Component {
     this.props.getAllHint()
   }
   async componentDidMount () {
+    let { setField, randomQuestion } = this.props
     window && window.localStorage.setItem('hintIndex', [])
     let questions = await window && window.localStorage.getItem('questions')
     if (questions) {
       let questionsParse = JSON.parse(questions)
-      this.props.setField('questions', questionsParse)
-      this.props.randomQuestion(questionsParse, this.props.setField)
+      setField('questions', questionsParse)
+      randomQuestion(questionsParse, setField)
     } else {
       this.props.getAllQuestion()
     }
@@ -43,7 +44,7 @@ class IndexPage extends React.Component {
           {step === 3 && <HintPage {...this.props} />}
           {step === 4 && <Scanner {...this.props} />}
           {step === 5 && <Final {...this.props} />}
-          {step === 99 && <Dashboard {...this.props} />}
+          {/* {step === 1 && <Dashboard {...this.props} />} */}
         </div>
       )
     } else {
