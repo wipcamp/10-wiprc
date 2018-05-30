@@ -11,7 +11,7 @@ import QuestionPage from '../components/Question/Main'
 import HintPage from '../components/Hint/Main'
 import Scanner from '../components/Scanner/Main'
 import Final from '../components/Final/Main'
-// import Dashboard from '../components/Dashboard/Main'
+import Dashboard from '../components/Dashboard/Main'
 
 import { actions as gameActions } from '../redux/modules/game'
 
@@ -39,11 +39,11 @@ class IndexPage extends React.Component {
       return (
         <div className='container-fluid'>
           {flavor !== '' && <Header flavor={flavor} score={score} />}
-          {step === 1 && <LandingPage {...this.props} />}
+          {/* {step === 1 && <LandingPage {...this.props} />} */}
           {step === 2 && <QuestionPage {...this.props} />}
           {step === 3 && <HintPage {...this.props} />}
           {step === 4 && <Scanner {...this.props} />}
-          {step === 5 && <Final {...this.props} />}
+          {step === 1 && <Final {...this.props} />}
           {/* {step === 1 && <Dashboard {...this.props} />} */}
         </div>
       )
