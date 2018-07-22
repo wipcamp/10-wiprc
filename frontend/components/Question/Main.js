@@ -9,7 +9,6 @@ const Question = ({ setField, randomHint, game: { flavorId, showHint, index, ste
       <MinHeight className='col-12 my-3'>
         <h2>
           คำถาม
-          { console.log('questions step ', question)}
         </h2>
         <h3 className='text-center my-3'>
           { question[index].questionName }
@@ -21,10 +20,11 @@ const Question = ({ setField, randomHint, game: { flavorId, showHint, index, ste
                 className={`btn btn-success my-2 col-12 ${!isClick && 'disabled btn-danger'}`}
                 disabled={!isClick}
                 onClick={() => {
-                  console.log(data.isTrue)
                   if (data.isTrue) {
-                    insert(`scores`, { score: 1, flavorId, questionId: question[index].questionId }, md5({ flavorId, score, ...question[index].questionId }))
-                    setField('score', score + 1)
+                    let newScore = parseInt(score) + 1
+                    window && window.localStorage.setItem('scores', newScore)
+                    insert(`scores`, { score: newScore, flavorId, questionId: question[index].questionId }, flavorId)
+                    setField('score', newScore)
                     randomHint(hint, setField, showHint)
                     setField('delay', 2500)
                     setField('step', 3)

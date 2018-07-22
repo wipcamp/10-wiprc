@@ -9,13 +9,8 @@ export default () => next => (action) => {
   const actionPromise = new Promise((resolve, reject) =>
     action.promise
       .then(async querySnapshot => {
-        let queryResult = []
-        await querySnapshot.forEach((doc) => {
-          queryResult.push(doc.data())
-        })
-        console.log(queryResult)
         return resolve(
-          next({ ...action, type: action.type.RESOLVED, data: queryResult })
+          next({ ...action, type: action.type.RESOLVED, data: querySnapshot })
         )
       }
       )

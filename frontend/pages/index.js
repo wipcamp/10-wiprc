@@ -23,6 +23,10 @@ class IndexPage extends React.Component {
   }
   async componentDidMount () {
     let { setField, randomQuestion } = this.props
+    let scores = window && window.localStorage.getItem('scores')
+    if (scores) {
+      setField('score', parseInt(scores))
+    }
     window && window.localStorage.setItem('hintIndex', [])
     let questions = await window && window.localStorage.getItem('questions')
     if (questions) {
@@ -31,6 +35,7 @@ class IndexPage extends React.Component {
       randomQuestion(questionsParse, setField)
     } else {
       this.props.getAllQuestion()
+      this.props.getAllHint()
     }
   }
   render () {

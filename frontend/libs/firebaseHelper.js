@@ -7,10 +7,30 @@ if (!firebase.apps.length) {
 
 export default firebase
 
-export const db = firebase.firestore()
+export const db = firebase.database()
 
-export const getAll = (ref, attr) => db.collection(`${ref}`)
+export const getAll = (ref, attr) => {
+  if (attr) {
+    return db.ref(`${ref}/${attr}`).once('value').then(async (snapshot) => {
+      let data = await snapshot.val()
+      return data
+    })
+  } else {
+    return db.ref(`${ref}`).once('value').then(async (snapshot) => {
+      let data = await snapshot.val()
+      return await data.filter(d => {
+        if (d) return d
+      })
+    })
+  }
+}
+export const getOne = async (ref, attr, whereCause) => {
+  return db.ref(`${ref}`).once('value').then(async (snapshot) => {
+    let data = snapshot.val()
+    return await data.filter(d => {
+      if (d[attr] === whereCause) return d
+    })
+  })
+}
 
-export const getOne = (ref, attr, whereCause) => db.collection(`${ref}`).where(`${attr}`, '==', whereCause)
-
-export const insert = (ref, value, doc) => db.collection(`${ref}`).doc(`${doc}`).set({ ...value })
+export const insert = (ref, value, doc) => db.ref(`${ref}/${doc}`).set({ ...value })

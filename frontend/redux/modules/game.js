@@ -72,6 +72,7 @@ export default (state = initialState, action) => {
       }
     case GET_ALL_QUESTION.RESOLVED:
       window && window.localStorage.setItem('questions', JSON.stringify(action.data))
+      console.log(action.data)
       return {
         ...state,
         loading: false,
@@ -125,14 +126,12 @@ export const actions = {
   getFlavorByFlavorCode: (e, flavorCode) => {
     e && e.preventDefault()
     window && window.localStorage.setItem('flavorKey', flavorCode)
-    const flavorsRef = getOne(`flavors`, `flavorCode`, flavorCode)
     return ({
       type: GET_FLAVOR,
-      promise: flavorsRef.get()
+      promise: getOne(`flavors`, `flavorCode`, flavorCode)
     })
   },
   randomQuestion: (questions, setField) => {
-    console.log('questions', questions)
     if (questions.length > 0) {
       const index = Math.floor((Math.random() * questions.length))
       setField('index', index)
@@ -140,7 +139,6 @@ export const actions = {
       setField('questions', questions)
       window && window.localStorage.setItem('questions', questions)
     } else {
-      console.log('wow')
       setField('step', 5)
     }
     return ({
@@ -174,17 +172,15 @@ export const actions = {
     })
   },
   getAllQuestion: () => {
-    const questionRef = getAll(`questions`)
     return ({
       type: GET_ALL_QUESTION,
-      promise: questionRef.get()
+      promise: getAll(`questions`)
     })
   },
   getAllHint: () => {
-    const hintRef = getAll(`hints`)
     return ({
       type: GET_ALL_HINT,
-      promise: hintRef.get()
+      promise: getAll(`hints`)
     })
   },
   setField: (field, value) => ({
