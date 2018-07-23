@@ -3,13 +3,11 @@ import { MinHeight } from '../Core/layout'
 
 const Hint = ({ setField, game: { step, hint, hintIndex, showHint } }) => (
   <div className='container'>
-    { console.log('hint step ', step)}
     <div className='row'>
       <MinHeight className='col-12'>
         <h1 className='my-3'>
           คำใบ้
         </h1>
-        { console.log(showHint) }
         {
           showHint && showHint.map((data, i) => {
             return (
