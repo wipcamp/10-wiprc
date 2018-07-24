@@ -8,4 +8,8 @@ export default () => injectGlobal`
     background-repeat: no-repeat;
     background-position: center 85%;
   }
+  .btn {
+    white-space:normal !important;
+    word-wrap: break-word !important;
+  }
 `
