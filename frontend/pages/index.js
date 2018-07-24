@@ -22,11 +22,7 @@ class IndexPage extends React.Component {
     this.props.getAllHint()
   }
   async componentDidMount () {
-    let { setField, randomQuestion } = this.props
-    let scores = window && window.localStorage.getItem('scores')
-    if (scores) {
-      setField('score', parseInt(scores))
-    }
+    let { setField, randomQuestion, getScore } = this.props
     window && window.localStorage.setItem('hintIndex', [])
     let questions = await window && window.localStorage.getItem('questions')
     if (questions) {
@@ -37,6 +33,8 @@ class IndexPage extends React.Component {
       this.props.getAllQuestion()
       this.props.getAllHint()
     }
+    let flavorId = window && window.localStorage.getItem('flavorId')
+    flavorId && getScore(flavorId)
   }
   render () {
     let { game: { step, flavor, score, questions } } = this.props
@@ -72,6 +70,7 @@ export default compose(
       randomQuestion: gameActions.randomQuestion,
       getAllHint: gameActions.getAllHint,
       getAllQuestion: gameActions.getAllQuestion,
+      getScore: gameActions.getScore,
       randomHint: gameActions.randomHint
     }
   )

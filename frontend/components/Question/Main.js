@@ -28,6 +28,12 @@ const Question = ({ setField, randomHint, game: { flavorId, showHint, index, ste
                     randomHint(hint, setField, showHint)
                     setField('delay', 2500)
                     setField('step', 3)
+                    question.splice(index, 1)
+                    window && window.localStorage.setItem('questions', JSON.stringify(question))
+                    console.log(index)
+                    setField('question', question)
+
+                    console.log(question)
                   } else {
                     setField('delay', delay * 2)
                     setField('isClick', false)
