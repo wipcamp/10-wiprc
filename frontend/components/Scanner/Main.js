@@ -1,13 +1,17 @@
 import React from 'react'
 import Reader from 'react-qr-reader'
+import { insert } from '../../libs/firebaseHelper'
 import { MinHeight } from '../Core/layout'
 
-const Scanner = ({ setField, randomQuestion, game: { questions, showHint, hintName, hintCode, error } }) => (
+const Scanner = ({ setField, randomQuestion, game: { flavorId, questions, showHint, hintName, hintCode, error } }) => (
   <div className='container'>
     <div className='row'>
       <MinHeight className='col-12 text-center'>
         <h3 className='my-3'>แสกน QR Code !</h3>
         <h2>{hintName}</h2>
+        {error && <div className="mt-5 alert alert-danger" role="alert">
+          <h5>{error}</h5>
+        </div>}
         <hr />
         <Reader
           delay={300}
@@ -22,6 +26,8 @@ const Scanner = ({ setField, randomQuestion, game: { questions, showHint, hintNa
                 let index = showHint.findIndex((data) => {
                   return data.hintCode === value
                 })
+                insert(`places`, { place: showHint[index].hintAnswer, hintName }, flavorId)
+                console.log(index)
                 showHint.splice(index, 1)
                 setField('showHint', showHint)
                 window.localStorage.setItem('hintAll', JSON.stringify(showHint))
