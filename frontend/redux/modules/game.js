@@ -34,6 +34,7 @@ let initialState = {
 
   hint: [],
   showHint: [],
+  hintName: '',
   qrResult: '',
 
   error: ''

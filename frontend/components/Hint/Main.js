@@ -16,6 +16,7 @@ const Hint = ({ setField, game: { step, hint, hintIndex, showHint } }) => (
                 className='btn btn-light col-12 btn-lg my-2'
                 onClick={() => {
                   setField('hintCode', data.hintCode)
+                  setField('hintName', data.hintName)
                   setField('step', 4)
                 }}
               >
