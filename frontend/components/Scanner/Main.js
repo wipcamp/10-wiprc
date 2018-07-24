@@ -2,14 +2,12 @@ import React from 'react'
 import Reader from 'react-qr-reader'
 import { MinHeight } from '../Core/layout'
 
-const Scanner = ({ setField, randomQuestion, game: { questions, showHint, hintCode, error } }) => (
+const Scanner = ({ setField, randomQuestion, game: { questions, showHint, hintName, hintCode, error } }) => (
   <div className='container'>
     <div className='row'>
       <MinHeight className='col-12 text-center'>
-        <h1 className='my-3'>แสกน QR Code !</h1>
-        {
-          error && <h3 className='my-3'>{ error }</h3>
-        }
+        <h3 className='my-3'>แสกน QR Code !</h3>
+        <h2>{hintName}</h2>
         <hr />
         <Reader
           delay={300}
