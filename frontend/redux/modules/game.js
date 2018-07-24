@@ -1,7 +1,5 @@
 import actionCreator from '../../libs/actionCreator'
 import { getOne, getAll } from '../../libs/firebaseHelper'
-import { resolve } from 'uri-js'
-import { reject } from 'any-promise'
 
 const gameAction = actionCreator('game')
 
@@ -12,6 +10,7 @@ const SET_FIELD = gameAction('SET_FIELD')
 const GET_FLAVOR = gameAction('GET_FLAVOR', true)
 const GET_ALL_QUESTION = gameAction('GET_ALL_QUESTION', true)
 const GET_ALL_HINT = gameAction('GET_ALL_HINT', true)
+const GET_SCORE = gameAction('GET_SCORE', true)
 
 const RANDOM_QUEST = gameAction('RANDOM_QUEST')
 const RANDOM_HINT = gameAction('RANDOM_HINT')
@@ -63,7 +62,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: 'Cant Connection Firebase'
+        error: 'รหัสผิดพลาดกรุณาใส่อีกครั้ง'
       }
     case GET_ALL_QUESTION.PENDING:
       return {
@@ -73,7 +72,6 @@ export default (state = initialState, action) => {
       }
     case GET_ALL_QUESTION.RESOLVED:
       window && window.localStorage.setItem('questions', JSON.stringify(action.data))
-      console.log(action.data)
       return {
         ...state,
         loading: false,
@@ -84,6 +82,24 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         error: 'Cant Connection Firebase'
+      }
+    case GET_SCORE.PENDING:
+      return {
+        ...state,
+        loading: true,
+        score: 0
+      }
+    case GET_SCORE.RESOLVED:
+      return {
+        ...state,
+        loading: false,
+        score: action.data.score
+      }
+    case GET_SCORE.REJECTED:
+      return {
+        ...state,
+        loading: false,
+        score: 0
       }
     case GET_ALL_HINT.PENDING:
       return {
@@ -176,6 +192,12 @@ export const actions = {
     return ({
       type: GET_ALL_QUESTION,
       promise: getAll(`questions`)
+    })
+  },
+  getScore: (flavorId) => {
+    return ({
+      type: GET_SCORE,
+      promise: getOne(`scores/${flavorId}`)
     })
   },
   getAllHint: () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { MinHeight } from '../Core/layout'
 
-const Landing = ({ setField, getFlavorByFlavorCode, game: { key } }) => (
+const Landing = ({ setField, getFlavorByFlavorCode, game: { key, error } }) => (
   <div className='container'>
     <div className='row'>
       <MinHeight className='col-12 d-flex justify-content-center align-items-center'>
@@ -9,6 +9,10 @@ const Landing = ({ setField, getFlavorByFlavorCode, game: { key } }) => (
           <h1>กรุณาใส่รหัส</h1>
           <input className='form-control' value={key} onChange={(e) => setField('key', e.target.value)} /> <br />
           <button className='btn btn-primary btn-lg' type='submit' >เล่นเลย !</button>
+          {error && <div className="mt-5 alert alert-danger" role="alert">
+            <h5>{error}</h5>
+          </div>}
+
         </form>
       </MinHeight>
     </div>

@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import config from '../credentials/client.json'
+import { resolve } from 'url'
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config)
@@ -27,9 +28,12 @@ export const getAll = (ref, attr) => {
 export const getOne = async (ref, attr, whereCause) => {
   return db.ref(`${ref}`).once('value').then(async (snapshot) => {
     let data = snapshot.val()
-    return await data.filter(d => {
-      if (d[attr] === whereCause) return d
-    })
+    if (Array.isArray(data)) {
+      return await data.filter(d => {
+        if (d[attr] === whereCause) return d
+      })
+    }
+    return data
   })
 }
 
