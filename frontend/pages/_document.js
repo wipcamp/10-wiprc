@@ -48,7 +48,7 @@ export default class MyDocument extends Document {
           <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
           <meta name="theme-color" content="#fff" />
           <link href="https://fonts.googleapis.com/css?family=Pridi" rel="stylesheet" />
-          <title>{`10 WIP RC`}</title>
+          <title>{`Search`}</title>
           {this.props.styleTags}
         </Head>
         <body>
