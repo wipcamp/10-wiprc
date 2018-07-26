@@ -6,7 +6,8 @@ export default () => injectGlobal`
     background: url('/static/img/bg.png');
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center 85%;
+    background-position: center 95%;
+    min-height: 100vh;
   }
   .btn {
     white-space:normal !important;
